@@ -20,7 +20,8 @@
 			preventSubmit: true, // stop the form submit event from firing
       submitError: false,
       submitSuccess: false,
-      preventSubmitSuccess: false // stop the form submit event from firing on success
+      preventSubmitSuccess: false, // stop the form submit event from firing on success
+      onlyForm: false
 		},
     methods: {
       init : function( options ) {
@@ -30,12 +31,17 @@
         settings.options = $.extend(true, settings.options, options);
 
         var $siblingElements = this;
-
         $.unique(
           $siblingElements.map(
             function () {
               var $this = $(this);
-              return $this.parents("form")[0];
+              if(settings.options.onlyForm) {
+                if($this.parents("form#"+settings.options.onlyForm)[0]) {
+                  return $this.parents("form")[0];
+                }
+              } else {
+                return $this.parents("form")[0];
+              }
             }
           )
         ).bind("submit", function (e) {
